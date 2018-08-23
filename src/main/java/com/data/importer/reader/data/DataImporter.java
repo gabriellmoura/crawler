@@ -42,7 +42,6 @@ public class DataImporter {
         for (int i = 0; i < titleElements.size(); i++) {
             Book book = new Book();
 
-            book.setId(Long.valueOf(i + 1));
             book.setDescription(getTextParagraph(pElements, indxParagraph, book));
             book.setLanguage(getText(languageElements, i));
             book.setTitle(getText(titleElements, i));
@@ -112,7 +111,7 @@ public class DataImporter {
                 Matcher match = word.matcher(htmlPage);
                 if (match.find()) {
                     String isbn = htmlPage.substring(match.start(), (match.end() + 19));
-                    isbn = isbn.replaceAll("[^-?0-9]+", "");
+                    isbn = isbn.replaceAll("[^-?0-9]+", "").replaceAll("\\W", "");
                     b.setIsbn(isbn);
                 } else {
                     b.setIsbn("Unavailable");

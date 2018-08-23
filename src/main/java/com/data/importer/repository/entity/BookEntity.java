@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 @Entity(name = "book")
 @AllArgsConstructor
@@ -25,7 +26,7 @@ public class BookEntity {
     @Column
     private String title;
 
-    @Column
+    @Lob
     private String description;
 
     @Column

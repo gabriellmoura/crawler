@@ -49,24 +49,39 @@ public class BookService {
         return bookDto;
     }
 
-    public List<BookDtoResponse> importBooks() {
+    public void importBooks() {
         log.debug("[BookService.importBooks] - Starting importing books");
-        List<BookDtoResponse> books = new ArrayList<>();
         try {
-            dataImporter.importBook().forEach(b -> books.add(mapper.map(b)));
+            dataImporter.importBook().forEach(b -> bookRepository.save(modelMapper.map(b, BookEntity.class)));
         } catch (Exception ex) {
             log.error("[BookService.importBooks] - There was an error when trying to importing.", ex);
             throw ex;
         }
-        return books;
     }
 
     public BookDto findBookById(Long id) {
+        log.debug("[BookService.findBookById] - Starting finding book by ID");
         try {
             Optional<BookEntity> bookEntity = bookRepository.findById(id);
             return bookEntity.isPresent() ? modelMapper.map(bookEntity.get(), BookDtoResponse.class) : null;
         } catch (Exception ex) {
-            log.error("[BookService.importBooks] - There was an error when trying to importing.", ex);
+            log.error("[BookService.findBookById] - There was an error when trying to importing.", ex);
+            throw ex;
+        }
+    }
+
+    public List<BookDtoResponse> findAll() {
+        log.debug("[BookService.findAll] - Starting finding book by ID");
+        try {
+            Iterable<BookEntity> booksEntity = bookRepository.findAll();
+            List<BookDtoResponse> books = new ArrayList<>();
+
+            for (BookEntity bookEntity : booksEntity) {
+                books.add(modelMapper.map(bookEntity, BookDtoResponse.class));
+            }
+            return books;
+        } catch (Exception ex) {
+            log.error("[BookService.findAll] - There was an error when trying to find all books.", ex);
             throw ex;
         }
     }
